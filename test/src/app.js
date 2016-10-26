@@ -1,2 +1,2 @@
 require('spawn!./spawned.js');
-require('file?name=bye.jpg!./hi.jpg');
+require('file?name=subdir/bye.jpg!./hi.jpg');
