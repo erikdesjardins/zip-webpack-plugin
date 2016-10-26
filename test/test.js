@@ -29,6 +29,21 @@ function runWithOptions({ path, filename }, options) {
 	});
 }
 
+test('basic', async t => {
+	const out = randomPath();
+	await runWithOptions({ path: out, filename: 'bundle.js' });
+
+	const byeJpg = readFileSync(join(out, 'subdir', 'bye.jpg'));
+	const bundleJs = readFileSync(join(out, 'bundle.js'));
+	const spawnedJs = readFileSync(join(out, 'spawned.js'));
+	const bundleJsZip = readFileSync(join(out, 'bundle.js.zip'));
+
+	t.ok(byeJpg);
+	t.regex(bundleJs, /var a = 'b';/);
+	t.regex(spawnedJs, /var foo = 'bar';/);
+	t.ok(bundleJsZip);
+});
+
 test('naming - default options, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out });
