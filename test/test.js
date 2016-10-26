@@ -1,9 +1,11 @@
-import { readFileSync } from 'fs';
-import { basename, join } from 'path';
+import { createWriteStream, readFileSync } from 'fs';
+import { basename, dirname, join } from 'path';
 
 import test from 'ava';
 import webpack from 'webpack';
 import rimraf from 'rimraf';
+import mkdirp from 'mkdirp';
+import yauzl from 'yauzl';
 
 import ZipPlugin from '../index';
 
@@ -42,6 +44,50 @@ test('basic', async t => {
 	t.regex(bundleJs, /var a = 'b';/);
 	t.regex(spawnedJs, /var foo = 'bar';/);
 	t.ok(bundleJsZip);
+});
+
+test('roundtrip', async t => {
+	const out = randomPath();
+	const outSrc = join(out, 'src');
+	const outDst = join(out, 'dst');
+
+	await runWithOptions({ path: outSrc, filename: 'bundle.js' });
+
+	const zipFile = await new Promise((resolve, reject) => {
+		yauzl.open(join(outSrc, 'bundle.js.zip'), { lazyEntries: true }, (err, zipFile) => {
+			err ? reject(err) : resolve(zipFile);
+		});
+	});
+
+	zipFile.readEntry();
+
+	zipFile.on('entry', entry => {
+		zipFile.openReadStream(entry, (err, readStream) => {
+			if (err) throw err;
+			mkdirp.sync(join(outDst, dirname(entry.fileName)));
+			const writeStream = createWriteStream(join(outDst, entry.fileName));
+			readStream.pipe(writeStream);
+			writeStream.on('close', () => zipFile.readEntry());
+		});
+	});
+
+	await new Promise((resolve, reject) => {
+		zipFile.on('close', resolve);
+		zipFile.on('error', reject);
+	});
+
+	t.is(Buffer.compare(
+		readFileSync(join(outSrc, 'subdir', 'bye.jpg')),
+		readFileSync(join(outDst, 'subdir', 'bye.jpg'))
+	), 0);
+	t.is(Buffer.compare(
+		readFileSync(join(outSrc, 'bundle.js')),
+		readFileSync(join(outDst, 'bundle.js'))
+	), 0);
+	t.is(Buffer.compare(
+		readFileSync(join(outSrc, 'spawned.js')),
+		readFileSync(join(outDst, 'spawned.js'))
+	), 0);
 });
 
 test('naming - default options, no webpack filename', async t => {
