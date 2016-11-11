@@ -38,11 +38,12 @@ ZipPlugin.prototype.apply = function(compiler) {
 
 			zipFile.addBuffer(
 				Buffer.isBuffer(source) ? source : new Buffer(source),
-				nameAndPath
+				nameAndPath,
+				options.fileOptions
 			);
 		}
 
-		zipFile.end();
+		zipFile.end(options.zipOptions);
 
 		// accumulate each buffer containing a part of the zip file
 		var bufs = [];
