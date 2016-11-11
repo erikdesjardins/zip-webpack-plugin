@@ -24,10 +24,21 @@ module.exports = {
   plugins: [
     new ZipPlugin({
       // OPTIONAL: defaults to the Webpack output path (above)
-      path: 'zip', // can be relative (to Webpack output path) or absolute
+      // can be relative (to Webpack output path) or absolute
+      path: 'zip',
+
       // OPTIONAL: defaults to the Webpack output filename (above) or,
       // if not present, the basename of the path
-      filename: 'my_app.zip'
+      filename: 'my_app.zip',
+
+      // OPTIONAL: defaults to including everything
+      // can be a string, a RegExp, or an array of strings and RegExps
+      include: [/\.js$/],
+
+      // OPTIONAL: defaults to excluding nothing
+      // can be a string, a RegExp, or an array of strings and RegExps
+      // if a file matches both include and exclude, exclude takes precedence
+      exclude: [/\.png$/, /\.html$/],
     })
   ]
 };
