@@ -46,15 +46,9 @@ test('basic', async t => {
 	t.ok(bundleJsZip);
 });
 
-test('roundtrip', async t => {
-	const out = randomPath();
-	const outSrc = join(out, 'src');
-	const outDst = join(out, 'dst');
-
-	await runWithOptions({ path: outSrc, filename: 'bundle.js' });
-
+async function unzip(zipFilePath, outDirPath) {
 	const zipFile = await new Promise((resolve, reject) => {
-		yauzl.open(join(outSrc, 'bundle.js.zip'), { lazyEntries: true }, (err, zipFile) => {
+		yauzl.open(zipFilePath, { lazyEntries: true }, (err, zipFile) => {
 			err ? reject(err) : resolve(zipFile);
 		});
 	});
@@ -64,8 +58,8 @@ test('roundtrip', async t => {
 	zipFile.on('entry', entry => {
 		zipFile.openReadStream(entry, (err, readStream) => {
 			if (err) throw err;
-			mkdirp.sync(join(outDst, dirname(entry.fileName)));
-			const writeStream = createWriteStream(join(outDst, entry.fileName));
+			mkdirp.sync(join(outDirPath, dirname(entry.fileName)));
+			const writeStream = createWriteStream(join(outDirPath, entry.fileName));
 			readStream.pipe(writeStream);
 			writeStream.on('close', () => zipFile.readEntry());
 		});
@@ -75,6 +69,16 @@ test('roundtrip', async t => {
 		zipFile.on('close', resolve);
 		zipFile.on('error', reject);
 	});
+}
+
+test('roundtrip', async t => {
+	const out = randomPath();
+	const outSrc = join(out, 'src');
+	const outDst = join(out, 'dst');
+
+	await runWithOptions({ path: outSrc, filename: 'bundle.js' });
+
+	await unzip(join(outSrc, 'bundle.js.zip'), outDst);
 
 	t.is(Buffer.compare(
 		readFileSync(join(outSrc, 'subdir', 'bye.jpg')),
@@ -88,6 +92,98 @@ test('roundtrip', async t => {
 		readFileSync(join(outSrc, 'spawned.js')),
 		readFileSync(join(outDst, 'spawned.js'))
 	), 0);
+});
+
+async function roundtrip(options) {
+	const out = randomPath();
+	const outSrc = join(out, 'src');
+	const outDst = join(out, 'dst');
+
+	await runWithOptions({ path: outSrc, filename: 'bundle.js' }, options);
+
+	await unzip(join(outSrc, 'bundle.js.zip'), outDst);
+
+	return outDst;
+}
+
+test('exclude string', async t => {
+	const out = await roundtrip({ exclude: 'spawned.js' });
+
+	t.ok(readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.ok(readFileSync(join(out, 'bundle.js')));
+	t.throws(() => readFileSync(join(out, 'spawned.js')));
+});
+
+test('include string', async t => {
+	const out = await roundtrip({ include: 'spawned.js' });
+
+	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.throws(() => readFileSync(join(out, 'bundle.js')));
+	t.ok(readFileSync(join(out, 'spawned.js')));
+});
+
+test('exclude regex', async t => {
+	const out = await roundtrip({ exclude: /\.jpg$/ });
+
+	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.ok(readFileSync(join(out, 'bundle.js')));
+	t.ok(readFileSync(join(out, 'spawned.js')));
+});
+
+test('include regex', async t => {
+	const out = await roundtrip({ include: /\.js$/ });
+
+	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.ok(readFileSync(join(out, 'bundle.js')));
+	t.ok(readFileSync(join(out, 'spawned.js')));
+});
+
+test('multiple excludes', async t => {
+	const out = await roundtrip({ exclude: [/\.jpg$/, 'bundle.js'] });
+
+	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.throws(() => readFileSync(join(out, 'bundle.js')));
+	t.ok(readFileSync(join(out, 'spawned.js')));
+});
+
+test('multiple includes', async t => {
+	const out = await roundtrip({ include: [/\.jpg$/, 'bundle.js'] });
+
+	t.ok(readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.ok(readFileSync(join(out, 'bundle.js')));
+	t.throws(() => readFileSync(join(out, 'spawned.js')));
+});
+
+test('exclude overrides include', async t => {
+	const out = await roundtrip({ include: [/\.jpg$/, /\.js$/], exclude: ['bundle.js'] });
+
+	t.ok(readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.throws(() => readFileSync(join(out, 'bundle.js')));
+	t.ok(readFileSync(join(out, 'spawned.js')));
+});
+
+test('exclude dir', async t => {
+	const out = await roundtrip({ exclude: 'subdir/' });
+
+	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.ok(readFileSync(join(out, 'bundle.js')));
+	t.ok(readFileSync(join(out, 'spawned.js')));
+});
+
+test('loaders not tested for include', async t => {
+	const out = await roundtrip({ include: /file/i });
+
+	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.throws(() => readFileSync(join(out, 'bundle.js')));
+	t.throws(() => readFileSync(join(out, 'spawned.js')));
+});
+
+test('loaders not tested for exclude', async t => {
+	const out = await roundtrip({ exclude: /file/i });
+
+	t.ok(readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.ok(readFileSync(join(out, 'bundle.js')));
+	t.ok(readFileSync(join(out, 'spawned.js')));
 });
 
 test('naming - default options, no webpack filename', async t => {

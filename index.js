@@ -6,6 +6,7 @@
 'use strict';
 
 var path = require('path');
+var ModuleFilenameHelpers = require('webpack/lib/ModuleFilenameHelpers');
 var RawSource = require('webpack-sources').RawSource;
 var yazl = require('yazl');
 
@@ -29,6 +30,9 @@ ZipPlugin.prototype.apply = function(compiler) {
 		// populate the zip file with each asset
 		for (var nameAndPath in compilation.assets) {
 			if (!compilation.assets.hasOwnProperty(nameAndPath)) continue;
+
+			// match against include and exclude, which may be strings, regexes, arrays of the previous or omitted
+			if (!ModuleFilenameHelpers.matchObject({ include: options.include, exclude: options.exclude }, nameAndPath)) continue;
 
 			var source = compilation.assets[nameAndPath].source();
 
