@@ -46,15 +46,9 @@ test('basic', async t => {
 	t.ok(bundleJsZip);
 });
 
-test('roundtrip', async t => {
-	const out = randomPath();
-	const outSrc = join(out, 'src');
-	const outDst = join(out, 'dst');
-
-	await runWithOptions({ path: outSrc, filename: 'bundle.js' });
-
+async function unzip(zipFilePath, outDirPath) {
 	const zipFile = await new Promise((resolve, reject) => {
-		yauzl.open(join(outSrc, 'bundle.js.zip'), { lazyEntries: true }, (err, zipFile) => {
+		yauzl.open(zipFilePath, { lazyEntries: true }, (err, zipFile) => {
 			err ? reject(err) : resolve(zipFile);
 		});
 	});
@@ -64,8 +58,8 @@ test('roundtrip', async t => {
 	zipFile.on('entry', entry => {
 		zipFile.openReadStream(entry, (err, readStream) => {
 			if (err) throw err;
-			mkdirp.sync(join(outDst, dirname(entry.fileName)));
-			const writeStream = createWriteStream(join(outDst, entry.fileName));
+			mkdirp.sync(join(outDirPath, dirname(entry.fileName)));
+			const writeStream = createWriteStream(join(outDirPath, entry.fileName));
 			readStream.pipe(writeStream);
 			writeStream.on('close', () => zipFile.readEntry());
 		});
@@ -75,6 +69,16 @@ test('roundtrip', async t => {
 		zipFile.on('close', resolve);
 		zipFile.on('error', reject);
 	});
+}
+
+test('roundtrip', async t => {
+	const out = randomPath();
+	const outSrc = join(out, 'src');
+	const outDst = join(out, 'dst');
+
+	await runWithOptions({ path: outSrc, filename: 'bundle.js' });
+
+	await unzip(join(outSrc, 'bundle.js.zip'), outDst);
 
 	t.is(Buffer.compare(
 		readFileSync(join(outSrc, 'subdir', 'bye.jpg')),
