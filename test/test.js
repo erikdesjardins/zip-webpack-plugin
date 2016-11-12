@@ -186,6 +186,47 @@ test('loaders not tested for exclude', async t => {
 	t.ok(readFileSync(join(out, 'spawned.js')));
 });
 
+test('fileOptions', async t => {
+	const out = randomPath();
+	await runWithOptions({ path: out, filename: 'bundle.js' }, {
+		fileOptions: {
+			mtime: new Date('2016-01-01Z'),
+			mode: 0o100664,
+			forceZip64Format: true,
+			compress: false,
+		},
+	});
+
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 59903);
+});
+
+test('zipOptions', async t => {
+	const out = randomPath();
+	await runWithOptions({ path: out, filename: 'bundle.js' }, {
+		zipOptions: {
+			forceZip64Format: true,
+		},
+	});
+
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57038);
+});
+
+test('fileOptions and zipOptions', async t => {
+	const out = randomPath();
+	await runWithOptions({ path: out, filename: 'bundle.js' }, {
+		fileOptions: {
+			mtime: new Date('2015-01-01Z'),
+			mode: 0o100665,
+			forceZip64Format: true,
+		},
+		zipOptions: {
+			forceZip64Format: true,
+		},
+	});
+
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57122);
+});
+
 test('naming - default options, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out });

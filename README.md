@@ -39,6 +39,21 @@ module.exports = {
       // can be a string, a RegExp, or an array of strings and RegExps
       // if a file matches both include and exclude, exclude takes precedence
       exclude: [/\.png$/, /\.html$/],
+
+      // yazl Options
+
+      // OPTIONAL: see https://github.com/thejoshwolfe/yazl#addfilerealpath-metadatapath-options
+      fileOptions: {
+        mtime: new Date(),
+        mode: 0o100664,
+        compress: true,
+        forceZip64Format: false,
+      },
+
+      // OPTIONAL: see https://github.com/thejoshwolfe/yazl#endoptions-finalsizecallback
+      zipOptions: {
+        forceZip64Format: false,
+      },
     })
   ]
 };
