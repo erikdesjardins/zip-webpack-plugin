@@ -227,6 +227,20 @@ test('fileOptions and zipOptions', async t => {
 	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57122);
 });
 
+test('pathPrefix', async t => {
+    const out = await roundtrip({pathPrefix: 'prefix'});
+
+    t.ok(readFileSync(join(out, 'prefix', 'subdir', 'bye.jpg')));
+    t.ok(readFileSync(join(out, 'prefix','bundle.js')));
+});
+
+test('pathPrefix', async t => {
+    t.throws(() => {
+    	const plugin = new ZipPlugin({pathPrefix: '/prefix'});
+    	plugin.apply();
+    });
+});
+
 test('naming - default options, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out });
