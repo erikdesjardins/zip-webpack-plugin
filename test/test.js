@@ -271,6 +271,12 @@ test('naming - specified filename with .zip, with webpack filename', async t => 
 	t.ok(readFileSync(join(out, 'my_app.zip')), '.zip exists');
 });
 
+test('naming - specified filename and extension, no webpack filename', async t => {
+	const out = randomPath();
+	await runWithOptions({ path: out }, { filename:'file', ext: 'ext'})
+	t.ok(readFileSync(join(out, 'file.ext')));
+});
+
 test('naming - specified relative path, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { path: 'zip' });

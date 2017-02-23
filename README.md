@@ -31,9 +31,13 @@ module.exports = {
       // if not present, the basename of the path
       filename: 'my_app.zip',
 
-      // OPTIONAL: defaults an empty string 
+      // OPTIONAL: defaults to 'zip'
+      // the file extension to use instead of 'zip'
+      extension: 'ext'
+
+      // OPTIONAL: defaults an empty string
       // the prefix for the files included in the zip file
-      pathPrefix: 'relative/path',  
+      pathPrefix: 'relative/path',
 
       // OPTIONAL: defaults to including everything
       // can be a string, a RegExp, or an array of strings and RegExps
