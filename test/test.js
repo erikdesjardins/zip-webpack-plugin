@@ -273,8 +273,26 @@ test('naming - specified filename with .zip, with webpack filename', async t => 
 
 test('naming - specified filename and extension, no webpack filename', async t => {
 	const out = randomPath();
-	await runWithOptions({ path: out }, { filename:'file', ext: 'ext'})
+	await runWithOptions({ path: out }, { filename:'file', extension: 'ext'})
 	t.ok(readFileSync(join(out, 'file.ext')));
+});
+
+test('naming - specified extension, webpack filename', async t => {
+	const out = randomPath();
+	await runWithOptions({ path: out, filename: 'bundle.js' }, { extension: 'ext'})
+	t.ok(readFileSync(join(out, 'bundle.js.ext')));
+});
+
+test('naming - specified extension, no webpack filename', async t => {
+	const out = randomPath();
+	await runWithOptions({ path: out }, { extension: 'ext'})
+	t.ok(readFileSync(join(out, basename(out) + '.ext')));
+});
+
+test('naming - specified relative path and extension, no webpack filename', async t => {
+	const out = randomPath();
+	await runWithOptions({ path: out }, { path: 'zip', extension: 'ext'})
+	t.ok(readFileSync(join(out, 'zip', 'zip.ext')));
 });
 
 test('naming - specified relative path, no webpack filename', async t => {
