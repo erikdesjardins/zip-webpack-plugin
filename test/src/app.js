@@ -1,4 +1,4 @@
-require('spawn?name=[name].js!./spawned.js');
-require('file?name=subdir/bye.jpg!./hi.jpg');
+require('spawn-loader?name=[name].js!./spawned.js');
+require('file-loader?name=subdir/bye.jpg!./hi.jpg');
 
 var a = 'b';

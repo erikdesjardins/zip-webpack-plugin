@@ -20,19 +20,19 @@
   },
   "homepage": "https://github.com/erikdesjardins/zip-webpack-plugin#readme",
   "dependencies": {
-    "webpack-sources": "^0.1.2",
-    "yazl": "^2.4.1"
+    "webpack-sources": "^0.1.4",
+    "yazl": "^2.4.2"
   },
   "peerDependencies": {
     "webpack": ">=2.2.0"
   },
   "devDependencies": {
-    "ava": "^0.12.0",
-    "file-loader": "^0.9.0",
+    "ava": "^0.18.2",
+    "file-loader": "^0.10.1",
     "mkdirp": "^0.5.1",
-    "rimraf": "^2.5.2",
-    "spawn-loader": "^0.1.0",
-    "webpack": "^1.12.14",
+    "rimraf": "^2.6.1",
+    "spawn-loader": "^1.0.0",
+    "webpack": "^2.2.1",
     "yauzl": "^2.7.0"
   }
 }
