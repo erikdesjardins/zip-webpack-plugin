@@ -24,7 +24,7 @@
     "yazl": "^2.4.1"
   },
   "peerDependencies": {
-    "webpack": ">=1.7.4"
+    "webpack": ">=2.2.0"
   },
   "devDependencies": {
     "ava": "^0.12.0",
