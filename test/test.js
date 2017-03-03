@@ -40,10 +40,10 @@ test('basic', async t => {
 	const spawnedJs = readFileSync(join(out, 'spawned.js'));
 	const bundleJsZip = readFileSync(join(out, 'bundle.js.zip'));
 
-	t.ok(byeJpg);
+	t.truthy(byeJpg);
 	t.regex(bundleJs, /var a = 'b';/);
 	t.regex(spawnedJs, /var foo = 'bar';/);
-	t.ok(bundleJsZip);
+	t.truthy(bundleJsZip);
 });
 
 async function unzip(zipFilePath, outDirPath) {
@@ -109,8 +109,8 @@ async function roundtrip(options) {
 test('exclude string', async t => {
 	const out = await roundtrip({ exclude: 'spawned.js' });
 
-	t.ok(readFileSync(join(out, 'subdir', 'bye.jpg')));
-	t.ok(readFileSync(join(out, 'bundle.js')));
+	t.truthy(readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.truthy(readFileSync(join(out, 'bundle.js')));
 	t.throws(() => readFileSync(join(out, 'spawned.js')));
 });
 
@@ -119,23 +119,23 @@ test('include string', async t => {
 
 	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
 	t.throws(() => readFileSync(join(out, 'bundle.js')));
-	t.ok(readFileSync(join(out, 'spawned.js')));
+	t.truthy(readFileSync(join(out, 'spawned.js')));
 });
 
 test('exclude regex', async t => {
 	const out = await roundtrip({ exclude: /\.jpg$/ });
 
 	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
-	t.ok(readFileSync(join(out, 'bundle.js')));
-	t.ok(readFileSync(join(out, 'spawned.js')));
+	t.truthy(readFileSync(join(out, 'bundle.js')));
+	t.truthy(readFileSync(join(out, 'spawned.js')));
 });
 
 test('include regex', async t => {
 	const out = await roundtrip({ include: /\.js$/ });
 
 	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
-	t.ok(readFileSync(join(out, 'bundle.js')));
-	t.ok(readFileSync(join(out, 'spawned.js')));
+	t.truthy(readFileSync(join(out, 'bundle.js')));
+	t.truthy(readFileSync(join(out, 'spawned.js')));
 });
 
 test('multiple excludes', async t => {
@@ -143,31 +143,31 @@ test('multiple excludes', async t => {
 
 	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
 	t.throws(() => readFileSync(join(out, 'bundle.js')));
-	t.ok(readFileSync(join(out, 'spawned.js')));
+	t.truthy(readFileSync(join(out, 'spawned.js')));
 });
 
 test('multiple includes', async t => {
 	const out = await roundtrip({ include: [/\.jpg$/, 'bundle.js'] });
 
-	t.ok(readFileSync(join(out, 'subdir', 'bye.jpg')));
-	t.ok(readFileSync(join(out, 'bundle.js')));
+	t.truthy(readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.truthy(readFileSync(join(out, 'bundle.js')));
 	t.throws(() => readFileSync(join(out, 'spawned.js')));
 });
 
 test('exclude overrides include', async t => {
 	const out = await roundtrip({ include: [/\.jpg$/, /\.js$/], exclude: ['bundle.js'] });
 
-	t.ok(readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.truthy(readFileSync(join(out, 'subdir', 'bye.jpg')));
 	t.throws(() => readFileSync(join(out, 'bundle.js')));
-	t.ok(readFileSync(join(out, 'spawned.js')));
+	t.truthy(readFileSync(join(out, 'spawned.js')));
 });
 
 test('exclude dir', async t => {
 	const out = await roundtrip({ exclude: 'subdir/' });
 
 	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
-	t.ok(readFileSync(join(out, 'bundle.js')));
-	t.ok(readFileSync(join(out, 'spawned.js')));
+	t.truthy(readFileSync(join(out, 'bundle.js')));
+	t.truthy(readFileSync(join(out, 'spawned.js')));
 });
 
 test('loaders not tested for include', async t => {
@@ -181,9 +181,9 @@ test('loaders not tested for include', async t => {
 test('loaders not tested for exclude', async t => {
 	const out = await roundtrip({ exclude: /file/i });
 
-	t.ok(readFileSync(join(out, 'subdir', 'bye.jpg')));
-	t.ok(readFileSync(join(out, 'bundle.js')));
-	t.ok(readFileSync(join(out, 'spawned.js')));
+	t.truthy(readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.truthy(readFileSync(join(out, 'bundle.js')));
+	t.truthy(readFileSync(join(out, 'spawned.js')));
 });
 
 test('fileOptions', async t => {
@@ -197,7 +197,7 @@ test('fileOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 59903);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 62146);
 });
 
 test('zipOptions', async t => {
@@ -208,7 +208,7 @@ test('zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57038);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57653);
 });
 
 test('fileOptions and zipOptions', async t => {
@@ -224,19 +224,19 @@ test('fileOptions and zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57122);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57737);
 });
 
 test('pathPrefix', async t => {
-    const out = await roundtrip({pathPrefix: 'prefix'});
+    const out = await roundtrip({ pathPrefix: 'prefix' });
 
-    t.ok(readFileSync(join(out, 'prefix', 'subdir', 'bye.jpg')));
-    t.ok(readFileSync(join(out, 'prefix','bundle.js')));
+    t.truthy(readFileSync(join(out, 'prefix', 'subdir', 'bye.jpg')));
+    t.truthy(readFileSync(join(out, 'prefix', 'bundle.js')));
 });
 
-test('pathPrefix', async t => {
+test('pathPrefix - throws on absolute path', async t => {
     t.throws(() => {
-    	const plugin = new ZipPlugin({pathPrefix: '/prefix'});
+    	const plugin = new ZipPlugin({ pathPrefix: '/prefix' });
     	plugin.apply();
     });
 });
@@ -244,31 +244,31 @@ test('pathPrefix', async t => {
 test('naming - default options, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out });
-	t.ok(readFileSync(join(out, basename(out) + '.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, '[name].js.zip')), '.zip exists');
 });
 
 test('naming - default options, with webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out, filename: 'bundle.js' });
-	t.ok(readFileSync(join(out, 'bundle.js.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'bundle.js.zip')), '.zip exists');
 });
 
 test('naming - specified filename with .zip, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { filename: 'my_app.zip' });
-	t.ok(readFileSync(join(out, 'my_app.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'my_app.zip')), '.zip exists');
 });
 
 test('naming - specified filename without .zip, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { filename: 'my_app' });
-	t.ok(readFileSync(join(out, 'my_app.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'my_app.zip')), '.zip exists');
 });
 
 test('naming - specified filename with .zip, with webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out, filename: 'bundle.js' }, { filename: 'my_app.zip' });
-	t.ok(readFileSync(join(out, 'my_app.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'my_app.zip')), '.zip exists');
 });
 
 test('naming - specified filename and extension, no webpack filename', async t => {
@@ -298,61 +298,61 @@ test('naming - specified relative path and extension, no webpack filename', asyn
 test('naming - specified relative path, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { path: 'zip' });
-	t.ok(readFileSync(join(out, 'zip', 'zip.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'zip', '[name].js.zip')), '.zip exists');
 });
 
 test('naming - specified relative path with slash, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { path: './zip' });
-	t.ok(readFileSync(join(out, 'zip', 'zip.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'zip', '[name].js.zip')), '.zip exists');
 });
 
 test('naming - specified relative path with parent, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: join(out, 'bin') }, { path: '../zip' });
-	t.ok(readFileSync(join(out, 'zip', 'zip.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'zip', '[name].js.zip')), '.zip exists');
 });
 
 test('naming - specified absolute path, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { path: join(out, 'zip') });
-	t.ok(readFileSync(join(out, 'zip', 'zip.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'zip', '[name].js.zip')), '.zip exists');
 });
 
 test('naming - specified relative path, with webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out, filename: 'bundle.js' }, { path: 'zip' });
-	t.ok(readFileSync(join(out, 'zip', 'bundle.js.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'zip', 'bundle.js.zip')), '.zip exists');
 });
 
 test('naming - specified absolute path, with webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out, filename: 'bundle.js' }, { path: join(out, 'zip') });
-	t.ok(readFileSync(join(out, 'zip', 'bundle.js.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'zip', 'bundle.js.zip')), '.zip exists');
 });
 
 test('naming - both specified, relative, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { path: 'zip', filename: 'archive' });
-	t.ok(readFileSync(join(out, 'zip', 'archive.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'zip', 'archive.zip')), '.zip exists');
 });
 
 test('naming - both specified, absolute, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { path: join(out, 'zip'), filename: 'archive' });
-	t.ok(readFileSync(join(out, 'zip', 'archive.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'zip', 'archive.zip')), '.zip exists');
 });
 
 test('naming - both specified, relative, with webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out, filename: 'bundle.js' }, { path: 'zip', filename: 'archive' });
-	t.ok(readFileSync(join(out, 'zip', 'archive.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'zip', 'archive.zip')), '.zip exists');
 });
 
 test('naming - both specified, absolute, with webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out, filename: 'bundle.js' }, { path: join(out, 'zip'), filename: 'archive' });
-	t.ok(readFileSync(join(out, 'zip', 'archive.zip')), '.zip exists');
+	t.truthy(readFileSync(join(out, 'zip', 'archive.zip')), '.zip exists');
 });
 
 test.after(() => {
