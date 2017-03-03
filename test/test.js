@@ -274,25 +274,31 @@ test('naming - specified filename with .zip, with webpack filename', async t => 
 test('naming - specified filename and extension, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { filename:'file', extension: 'ext'})
-	t.ok(readFileSync(join(out, 'file.ext')));
+	t.truthy(readFileSync(join(out, 'file.ext')), '.ext exists');
 });
 
 test('naming - specified extension, webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out, filename: 'bundle.js' }, { extension: 'ext'})
-	t.ok(readFileSync(join(out, 'bundle.js.ext')));
+	t.truthy(readFileSync(join(out, 'bundle.js.ext')), '.ext exists');
 });
 
 test('naming - specified extension, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { extension: 'ext'})
-	t.ok(readFileSync(join(out, basename(out) + '.ext')));
+	t.truthy(readFileSync(join(out, '[name].js.ext')), '.ext exists');
 });
 
 test('naming - specified relative path and extension, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out }, { path: 'zip', extension: 'ext'})
-	t.ok(readFileSync(join(out, 'zip', 'zip.ext')));
+	t.truthy(readFileSync(join(out, 'zip', '[name].js.ext')), '.ext exists');
+});
+
+test('naming - specified relative path with slash and extension, no webpack filename', async t => {
+	const out = randomPath();
+	await runWithOptions({ path: out }, { path: './zip', extension: 'ext'})
+	t.truthy(readFileSync(join(out, 'zip', '[name].js.ext')), '.ext exists');
 });
 
 test('naming - specified relative path, no webpack filename', async t => {
