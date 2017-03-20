@@ -64,11 +64,13 @@ ZipPlugin.prototype.apply = function(compiler) {
 			// default to webpack root filename if no filename provided, else the basename of the output path
 			var outputFilename = options.filename || compilation.options.output.filename || path.basename(outputPath);
 
+			var extension = '.' + (options.extension || 'zip');
+
 			// combine the output path and filename
 			var outputPathAndFilename = path.resolve(
 				compilation.options.output.path, // ...supporting both absolute and relative paths
 				outputPath,
-				path.basename(outputFilename, '.zip') + '.zip' // ...and filenames with and without a .zip extension
+				path.basename(outputFilename, '.zip') + extension // ...and filenames with and without a .zip extension
 			);
 
 			// resolve a relative output path with respect to webpack's root output path
