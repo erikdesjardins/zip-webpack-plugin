@@ -33,7 +33,7 @@ module.exports = {
 
       // OPTIONAL: defaults to 'zip'
       // the file extension to use instead of 'zip'
-      extension: 'ext'
+      extension: 'ext',
 
       // OPTIONAL: defaults an empty string
       // the prefix for the files included in the zip file

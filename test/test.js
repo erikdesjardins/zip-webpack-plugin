@@ -197,7 +197,7 @@ test('fileOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 62386);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 62398);
 });
 
 test('zipOptions', async t => {
@@ -208,7 +208,7 @@ test('zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57673);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57671);
 });
 
 test('fileOptions and zipOptions', async t => {
@@ -224,7 +224,7 @@ test('fileOptions and zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57757);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57755);
 });
 
 test('pathPrefix', async t => {
