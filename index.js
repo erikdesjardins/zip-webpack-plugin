@@ -12,9 +12,20 @@ var yazl = require('yazl');
 
 function ZipPlugin(options) {
 	this.options = options || {};
+	this.zipFile = new yazl.ZipFile();
+	this.refCount = 0
+
+	// accumulate each buffer containing a part of the zip file
+	this.bufs = [];
+
+	this.zipFile.outputStream.on('data', function(buf) {
+		this.bufs.push(buf);
+	}.bind(this));
 }
 
 ZipPlugin.prototype.apply = function(compiler) {
+	this.refCount++;
+	var self = this;
 	var options = this.options;
 
     if (options.pathPrefix && path.isAbsolute(options.pathPrefix)) {
@@ -29,8 +40,6 @@ ZipPlugin.prototype.apply = function(compiler) {
 			return;
 		}
 
-		var zipFile = new yazl.ZipFile();
-
 		var pathPrefix = options.pathPrefix || '';
 
 		// populate the zip file with each asset
@@ -42,23 +51,21 @@ ZipPlugin.prototype.apply = function(compiler) {
 
 			var source = compilation.assets[nameAndPath].source();
 
-			zipFile.addBuffer(
+			self.zipFile.addBuffer(
 				Buffer.isBuffer(source) ? source : new Buffer(source),
 				path.join(pathPrefix, nameAndPath),
 				options.fileOptions
 			);
 		}
 
-		zipFile.end(options.zipOptions);
+		if(--self.refCount !== 0) {
+			callback();
+			return
+		}
 
-		// accumulate each buffer containing a part of the zip file
-		var bufs = [];
+		self.zipFile.end(options.zipOptions);
 
-		zipFile.outputStream.on('data', function(buf) {
-			bufs.push(buf);
-		});
-
-		zipFile.outputStream.on('end', function() {
+		self.zipFile.outputStream.on('end', function() {
 			// default to webpack's root output path if no path provided
 			var outputPath = options.path || compilation.options.output.path;
 			// default to webpack root filename if no filename provided, else the basename of the output path
@@ -81,7 +88,7 @@ ZipPlugin.prototype.apply = function(compiler) {
 			);
 
 			// add our zip file to the assets
-			compilation.assets[relativeOutputPath] = new RawSource(Buffer.concat(bufs));
+			compilation.assets[relativeOutputPath] = new RawSource(Buffer.concat(self.bufs));
 
 			callback();
 		});
