@@ -36,8 +36,8 @@ test('basic', async t => {
 	await runWithOptions({ path: out, filename: 'bundle.js' });
 
 	const byeJpg = readFileSync(join(out, 'subdir', 'bye.jpg'));
-	const bundleJs = readFileSync(join(out, 'bundle.js'));
-	const spawnedJs = readFileSync(join(out, 'spawned.js'));
+	const bundleJs = readFileSync(join(out, 'bundle.js'), 'utf8');
+	const spawnedJs = readFileSync(join(out, 'spawned.js'), 'utf8');
 	const bundleJsZip = readFileSync(join(out, 'bundle.js.zip'));
 
 	t.truthy(byeJpg);
@@ -197,7 +197,7 @@ test('fileOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 62398);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 62074);
 });
 
 test('zipOptions', async t => {
@@ -208,7 +208,7 @@ test('zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57671);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57578);
 });
 
 test('fileOptions and zipOptions', async t => {
@@ -224,7 +224,7 @@ test('fileOptions and zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57755);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57662);
 });
 
 test('pathPrefix', async t => {
