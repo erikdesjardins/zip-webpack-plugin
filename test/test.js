@@ -241,6 +241,35 @@ test('pathPrefix - throws on absolute path', async t => {
     });
 });
 
+test('pathMapper - jpg', async t => {
+	const out = await roundtrip({
+		pathMapper: p => {
+			if (p.endsWith('.jpg')) return join(dirname(p), 'images', basename(p));
+			return p;
+		}
+	});
+
+	t.truthy(readFileSync(join(out, 'subdir', 'images', 'bye.jpg')));
+	t.throws(() => readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.truthy(readFileSync(join(out, 'bundle.js')));
+	t.truthy(readFileSync(join(out, 'spawned.js')));
+});
+
+test('pathMapper - js', async t => {
+	const out = await roundtrip({
+		pathMapper: p => {
+			if (p.endsWith('.js')) return join(dirname(p), 'js', basename(p));
+			return p;
+		}
+	});
+
+	t.truthy(readFileSync(join(out, 'subdir', 'bye.jpg')));
+	t.truthy(readFileSync(join(out, 'js', 'bundle.js')));
+	t.throws(() => readFileSync(join(out, 'bundle.js')));
+	t.truthy(readFileSync(join(out, 'js', 'spawned.js')));
+	t.throws(() => readFileSync(join(out, 'spawned.js')));
+});
+
 test('naming - default options, no webpack filename', async t => {
 	const out = randomPath();
 	await runWithOptions({ path: out });
