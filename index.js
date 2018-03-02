@@ -24,7 +24,7 @@ ZipPlugin.prototype.apply = function(compiler) {
 	compiler.plugin('emit', function(compilation, callback) {
 		// assets from child compilers will be included in the parent
 		// so we should not run in child compilers
-		if (this.isChild()) {
+		if (compilation.compiler.isChild()) {
 			callback();
 			return;
 		}
