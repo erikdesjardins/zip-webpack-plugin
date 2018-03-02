@@ -1,4 +1,5 @@
-# zip-webpack-plugin [![Build Status](https://travis-ci.org/erikdesjardins/zip-webpack-plugin.svg?branch=master)](https://travis-ci.org/erikdesjardins/zip-webpack-plugin)
+# zip-webpack-4-plugin
+Forked from https://github.com/erikdesjardins/zip-webpack-plugin with compatibility to webpack4.
 
 Webpack plugin to zip up emitted files.
 
@@ -6,14 +7,14 @@ Compresses all assets into a zip file.
 
 ## Installation
 
-`npm install --save-dev zip-webpack-plugin`
+`npm install --save-dev zip-webpack-4-plugin`
 
 ## Usage
 
 **webpack.config.js**
 
 ```js
-var ZipPlugin = require('zip-webpack-plugin');
+var ZipPlugin = require('zip-webpack-4-plugin');
 
 module.exports = {
   // ...
