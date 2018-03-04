@@ -16,6 +16,8 @@ function randomPath() {
 function runWithOptions({ path, filename }, options) {
 	return new Promise((resolve, reject) => {
 		webpack({
+			mode: 'development',
+			devtool: false,
 			entry: join(__dirname, 'src', 'app'),
 			bail: true,
 			output: {
@@ -26,7 +28,7 @@ function runWithOptions({ path, filename }, options) {
 				new ZipPlugin(options)
 			]
 		}, (err, stats) => {
-			err ? reject(err) : resolve(stats);
+			stats.hasErrors() ? reject(stats.toString()) : resolve(stats);
 		});
 	});
 }
