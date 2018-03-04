@@ -16,6 +16,8 @@ function randomPath() {
 function runWithOptions({ path, filename }, options) {
 	return new Promise((resolve, reject) => {
 		webpack({
+			mode: 'development',
+			devtool: false,
 			entry: join(__dirname, 'src', 'app'),
 			bail: true,
 			output: {
@@ -26,7 +28,7 @@ function runWithOptions({ path, filename }, options) {
 				new ZipPlugin(options)
 			]
 		}, (err, stats) => {
-			err ? reject(err) : resolve(stats);
+			stats.hasErrors() ? reject(stats.toString()) : resolve(stats);
 		});
 	});
 }
@@ -197,7 +199,7 @@ test('fileOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 62074);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 63791 : 63786);
 });
 
 test('zipOptions', async t => {
@@ -208,7 +210,7 @@ test('zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57578);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57857 : 57852);
 });
 
 test('fileOptions and zipOptions', async t => {
@@ -224,7 +226,7 @@ test('fileOptions and zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, 57662);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57941 : 57936);
 });
 
 test('pathPrefix', async t => {

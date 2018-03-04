@@ -21,10 +21,10 @@ ZipPlugin.prototype.apply = function(compiler) {
         throw new Error('"pathPrefix" must be a relative path');
     }
 
-	compiler.plugin('emit', function(compilation, callback) {
+	compiler.hooks.emit.tapAsync(ZipPlugin.name, function(compilation, callback) {
 		// assets from child compilers will be included in the parent
 		// so we should not run in child compilers
-		if (this.isChild()) {
+		if (compilation.compiler.isChild()) {
 			callback();
 			return;
 		}

@@ -1,8 +1,7 @@
 language: node_js
 node_js:
-  - 7
+  - 8
   - 6
-  - 4
 script: npm test
 branches:
   only:
@@ -15,4 +14,4 @@ deploy:
     secure: G21VkwYElJ3X3V13wFNzYP7Ri4TcBuUIfTQds4stym8tC8i8WDupBYVTfgsnf7PhomDe7Q7InbasUGBmmV+gt58DfRnLjKIiSUPOzeuR+1Ss75oLuwK9xgLUY5KJNAlxljBMtXI8DHYShxSGp2ouxanhTl/NM6tDZFJtE9eEeLKGJd8qUyO1zGd3WS+fwm7uDq8DzzKBN9vwZZ5Yh8/bgbsNX1IebZOcNCXAs1XpT9MLWGGJiLVeVyeOZje9rK8TtP0G+PqFayqQkYPEUm0tVZv2/ajreNU1MUw4NcvtjpBpxHFv3RRUFZumLjKz+q6hsvi94sxluycamq9SIkNtn/cac8C9L0vQICm1NFx8HzL8R7OYBkUaWczgIuvvtWXMlzBvQejcYvR5A0gXuMpCL1Hdwmu3+pKGbcnXoprXIrb4jnmS5DTsbUfHEr1SMdEtAU4SsqG2aVh4khV5YnarkIIhZq9uITuPrxIiAHbix3HvGPFRQTERTIjrJ0healERDdd07O5Okl0Fl5pbT0buk9ycKfmsVut1Myt5j2iDRyOl2ANryNsa72pkE3BfwCjfTTlP8mV/bBctK5nvHcoAnbAY6HhrtnPV2X4eIlqxrjBFHhw439MyRX1FEfd6pz2UjtofiiWeniUJRiioNbAUadXBqnWw4M3pwhAZjpwRhlc=
   on:
     tags: true
-    node: 7
+    node: 8
