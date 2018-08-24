@@ -199,7 +199,7 @@ test('fileOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 63791 : 63786);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 63791 : 65758);
 });
 
 test('zipOptions', async t => {
@@ -210,7 +210,7 @@ test('zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57857 : 57852);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57857 : 58423);
 });
 
 test('fileOptions and zipOptions', async t => {
@@ -226,7 +226,7 @@ test('fileOptions and zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57941 : 57936);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57941 : 58507);
 });
 
 test('pathPrefix', async t => {
