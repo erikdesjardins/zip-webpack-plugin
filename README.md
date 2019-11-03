@@ -1,4 +1,4 @@
-# zip-webpack-plugin [![Build Status](https://travis-ci.org/erikdesjardins/zip-webpack-plugin.svg?branch=master)](https://travis-ci.org/erikdesjardins/zip-webpack-plugin)
+# zip-webpack-plugin
 
 Webpack plugin to zip up emitted files.
 
