@@ -27,12 +27,12 @@
     "webpack": "^4.0.0"
   },
   "devDependencies": {
-    "ava": "^0.25.0",
+    "ava": "^2.4.0",
     "file-loader": "^1.1.11",
     "mkdirp": "^0.5.1",
-    "rimraf": "^2.6.2",
+    "rimraf": "^3.0.0",
     "spawn-loader": "^5.0.0",
-    "webpack": "^4.0.1",
-    "yauzl": "^2.9.1"
+    "webpack": "^4.41.2",
+    "yauzl": "^2.10.0"
   }
 }
