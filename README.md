@@ -6,7 +6,7 @@ Compresses all assets into a zip file.
 
 ## Installation
 
-For Webpack 4:
+For Webpack 4 / 5:
 
 `npm install --save-dev zip-webpack-plugin`
 

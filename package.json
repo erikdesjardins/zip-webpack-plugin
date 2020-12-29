@@ -1,6 +1,6 @@
 {
   "name": "zip-webpack-plugin",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Webpack plugin to zip up emitted files.",
   "main": "index.js",
   "scripts": {
@@ -20,19 +20,19 @@
   },
   "homepage": "https://github.com/erikdesjardins/zip-webpack-plugin#readme",
   "dependencies": {
-    "webpack-sources": "^1.1.0",
-    "yazl": "^2.4.3"
+    "yazl": "^2.5.1"
   },
   "peerDependencies": {
-    "webpack": "^4.0.0"
+    "webpack": "^4.0.0 || ^5.0.0",
+    "webpack-sources": "*"
   },
   "devDependencies": {
-    "ava": "^2.4.0",
-    "file-loader": "^1.1.11",
-    "mkdirp": "^0.5.1",
-    "rimraf": "^3.0.0",
-    "spawn-loader": "^5.0.0",
-    "webpack": "^4.41.2",
+    "ava": "^3.14.0",
+    "file-loader": "^6.2.0",
+    "mkdirp": "^1.0.4",
+    "rimraf": "^3.0.2",
+    "spawn-loader": "^7.0.0",
+    "webpack": "^5.11.1",
     "yauzl": "^2.10.0"
   }
 }

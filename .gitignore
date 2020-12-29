@@ -38,3 +38,6 @@ node_modules
 # IntelliJ
 *.iml
 .idea
+
+# dist
+dist/
