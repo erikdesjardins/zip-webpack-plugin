@@ -100,13 +100,13 @@ ZipPlugin.prototype.apply = function(compiler) {
 	} else {
 		compiler.hooks.compilation.tap(ZipPlugin.name, compilation => {
 			compilation.hooks.processAssets.tapPromise(
-			   {
-				 name: ZipPlugin.name,
-				 stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
-			   },
-			   () => new Promise(resolve => process(compilation, resolve))
-			 );
-		  });
+				{
+					name: ZipPlugin.name,
+					stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+				},
+				() => new Promise(resolve => process(compilation, resolve))
+			);
+		});
 	}
 };
 
