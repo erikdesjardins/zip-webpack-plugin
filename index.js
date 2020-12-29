@@ -17,7 +17,7 @@ function ZipPlugin(options) {
 
 ZipPlugin.prototype.apply = function(compiler) {
 	const options = this.options;
-	const isWebpack4 = webpack.version.split('.')[0] == '4';
+	const isWebpack4 = webpack.version.startsWith('4.');
 
     if (options.pathPrefix && path.isAbsolute(options.pathPrefix)) {
         throw new Error('"pathPrefix" must be a relative path');
