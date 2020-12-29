@@ -1,13 +1,13 @@
-import { createWriteStream, readFileSync } from 'fs';
-import { basename, dirname, join } from 'path';
+const { createWriteStream, readFileSync } = require('fs');
+const { basename, dirname, join } = require('path');
 
-import test from 'ava';
-import webpack from 'webpack';
-import rimraf from 'rimraf';
-import mkdirp from 'mkdirp';
-import yauzl from 'yauzl';
+const test = require('ava');
+const webpack = require('webpack');
+const rimraf = require('rimraf');
+const mkdirp = require('mkdirp');
+const yauzl = require('yauzl');
 
-import ZipPlugin from '../index';
+const ZipPlugin = require('../index');
 
 function randomPath() {
 	return join(__dirname, 'dist', String(Math.random()).slice(2));
@@ -199,7 +199,7 @@ test('fileOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 63791 : 65758);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 62455 : 62450);
 });
 
 test('zipOptions', async t => {
@@ -210,7 +210,7 @@ test('zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57857 : 58423);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57642 : 57636);
 });
 
 test('fileOptions and zipOptions', async t => {
@@ -226,7 +226,7 @@ test('fileOptions and zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57941 : 58507);
+	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57726 : 57720);
 });
 
 test('pathPrefix', async t => {
