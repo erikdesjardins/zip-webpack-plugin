@@ -8,7 +8,7 @@
 const path = require('path');
 const ModuleFilenameHelpers = require('webpack/lib/ModuleFilenameHelpers');
 const webpack = require('webpack');
-const { RawSource } = webpack.sources || require('webpack-sources');
+const { RawSource } = require('webpack-sources');
 const yazl = require('yazl');
 
 function ZipPlugin(options) {
