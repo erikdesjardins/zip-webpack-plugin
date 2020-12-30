@@ -8,7 +8,9 @@
 const path = require('path');
 const ModuleFilenameHelpers = require('webpack/lib/ModuleFilenameHelpers');
 const webpack = require('webpack');
-const { RawSource } = require('webpack-sources');
+// Webpack 5 exposes the sources property to ensure the right version of webpack-sources is used.
+// require('webpack-sources') approach may result in the "Cannot find module 'webpack-sources'" error.
+const { RawSource } = webpack.sources || require('webpack-sources');
 const yazl = require('yazl');
 
 function ZipPlugin(options) {
@@ -98,11 +100,11 @@ ZipPlugin.prototype.apply = function(compiler) {
 	if (isWebpack4) {
 		compiler.hooks.emit.tapAsync(ZipPlugin.name, process);
 	} else {
-		compiler.hooks.compilation.tap(ZipPlugin.name, compilation => {
+		compiler.hooks.thisCompilation.tap(ZipPlugin.name, compilation => {
 			compilation.hooks.processAssets.tapPromise(
 				{
 					name: ZipPlugin.name,
-					stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+					stage: webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_TRANSFER,
 				},
 				() => new Promise(resolve => process(compilation, resolve))
 			);
