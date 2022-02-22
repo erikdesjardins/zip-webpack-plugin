@@ -20,6 +20,7 @@ function ZipPlugin(options) {
 ZipPlugin.prototype.apply = function(compiler) {
 	const options = this.options;
 	const isWebpack4 = webpack.version.startsWith('4.');
+	const isWebpack5 = webpack.version.startsWith('5.');
 
     if (options.pathPrefix && path.isAbsolute(options.pathPrefix)) {
         throw new Error('"pathPrefix" must be a relative path');
@@ -97,7 +98,7 @@ ZipPlugin.prototype.apply = function(compiler) {
 		});
 	};
 
-	if (isWebpack4) {
+	if (isWebpack4 || isWebpack5) {
 		compiler.hooks.emit.tapAsync(ZipPlugin.name, process);
 	} else {
 		compiler.hooks.thisCompilation.tap(ZipPlugin.name, compilation => {
