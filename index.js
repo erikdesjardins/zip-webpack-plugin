@@ -39,8 +39,7 @@ ZipPlugin.prototype.apply = function(compiler) {
 		const pathMapper = options.pathMapper || function(x) { return x; };
 
 		// populate the zip file with each asset
-		for (const nameAndPath in compilation.assets) {
-			if (!compilation.assets.hasOwnProperty(nameAndPath)) continue;
+		for (const nameAndPath of Object.keys(compilation.assets)) {
 
 			// match against include and exclude, which may be strings, regexes, arrays of the previous or omitted
 			if (!ModuleFilenameHelpers.matchObject({ include: options.include, exclude: options.exclude }, nameAndPath)) continue;
