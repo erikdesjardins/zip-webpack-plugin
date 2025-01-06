@@ -10,7 +10,7 @@ const ModuleFilenameHelpers = require('webpack/lib/ModuleFilenameHelpers');
 const webpack = require('webpack');
 // Webpack 5 exposes the sources property to ensure the right version of webpack-sources is used.
 // require('webpack-sources') approach may result in the "Cannot find module 'webpack-sources'" error.
-const { RawSource } = webpack.sources || require('webpack-sources');
+const webpackSources = webpack.sources || require('webpack-sources');
 const yazl = require('yazl');
 
 function ZipPlugin(options) {
@@ -20,6 +20,8 @@ function ZipPlugin(options) {
 ZipPlugin.prototype.apply = function(compiler) {
 	const options = this.options;
 	const isWebpack4 = webpack.version.startsWith('4.');
+	// Prefer `compiler.webpack` instead of webpack or webpack-sources import (rspack compatibility hack)
+	const { RawSource } = compiler.webpack && compiler.webpack.sources || webpackSources;
 
     if (options.pathPrefix && path.isAbsolute(options.pathPrefix)) {
         throw new Error('"pathPrefix" must be a relative path');
