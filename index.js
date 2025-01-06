@@ -19,7 +19,9 @@ function ZipPlugin(options) {
 
 ZipPlugin.prototype.apply = function(compiler) {
 	const options = this.options;
-	const isWebpack4 = compiler.webpack === undefined || webpack.version.startsWith('4.');
+	const isWebpack4 = webpack.version.startsWith('4.');
+	// Prefer `compiler.webpack` instead of webpack or webpack-sources import (rspack compatibility hack)
+	const { RawSource } = compiler.webpack && compiler.webpack.sources || webpackSources;
 
     if (options.pathPrefix && path.isAbsolute(options.pathPrefix)) {
         throw new Error('"pathPrefix" must be a relative path');
@@ -84,7 +86,6 @@ ZipPlugin.prototype.apply = function(compiler) {
 				outputPathAndFilename
 			);
 
-			const RawSource = isWebpack4 ? webpackSources.RawSource : compiler.webpack.sources.RawSource;
 			// add our zip file to the assets
 			const zipFileSource = new RawSource(Buffer.concat(bufs));
 			if (isWebpack4) {
