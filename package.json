@@ -1,6 +1,6 @@
 {
   "name": "zip-webpack-plugin",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Webpack plugin to zip up emitted files.",
   "main": "index.js",
   "scripts": {
