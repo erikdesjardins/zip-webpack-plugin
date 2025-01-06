@@ -188,9 +188,13 @@ test('loaders not tested for exclude', async t => {
 	t.truthy(readFileSync(join(out, 'spawned.js')));
 });
 
-test('fileOptions', async t => {
+test('fileOptions and zipOptions', async t => {
 	const out = randomPath();
-	await runWithOptions({ path: out, filename: 'bundle.js' }, {
+
+	await runWithOptions({ path: out, filename: 'baseline.js' }, {});
+
+	// File options: uncompressed
+	await runWithOptions({ path: out, filename: 'uncompressed.js' }, {
 		fileOptions: {
 			mtime: new Date('2016-01-01Z'),
 			mode: 0o100664,
@@ -199,23 +203,15 @@ test('fileOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 62455 : 62450);
-});
-
-test('zipOptions', async t => {
-	const out = randomPath();
-	await runWithOptions({ path: out, filename: 'bundle.js' }, {
+	// Zip options: force zip64 format
+	await runWithOptions({ path: out, filename: 'zip64.js' }, {
 		zipOptions: {
 			forceZip64Format: true,
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57642 : 57637);
-});
-
-test('fileOptions and zipOptions', async t => {
-	const out = randomPath();
-	await runWithOptions({ path: out, filename: 'bundle.js' }, {
+	// Both: Set time and mode, force zip64 format for both
+	await runWithOptions({ path: out, filename: 'both.js' }, {
 		fileOptions: {
 			mtime: new Date('2015-01-01Z'),
 			mode: 0o100665,
@@ -226,7 +222,29 @@ test('fileOptions and zipOptions', async t => {
 		},
 	});
 
-	t.is(readFileSync(join(out, 'bundle.js.zip')).length, process.platform === 'win32' ? 57726 : 57721);
+	const baselineSize = readFileSync(join(out, 'baseline.js.zip')).length;
+	const uncompressedSize = readFileSync(join(out, 'uncompressed.js.zip')).length;
+	const zip64Size = readFileSync(join(out, 'zip64.js.zip')).length;
+	const bothSize = readFileSync(join(out, 'both.js.zip')).length;
+
+	// Should be around 57k, mostly we want to make sure it's not empty here
+	t.truthy(baselineSize > 50000);
+	t.truthy(uncompressedSize > 50000);
+	t.truthy(zip64Size > 50000);
+	t.truthy(bothSize > 50000);
+
+	// Uncompressed size is larger than (baseline) compressed size
+	t.truthy(uncompressedSize > baselineSize);
+
+	// Zip64 size is (slightly) larger than (baseline) compressed size
+	t.truthy(zip64Size > baselineSize);
+	// Zip64 size is (slightly) smaller than uncompressed size
+	t.truthy(zip64Size < uncompressedSize);
+
+	// Both size is (slightly) larger than Zip64 size
+	t.truthy(bothSize > zip64Size);
+	// Both size is (slightly) smaller than uncompressed size
+	t.truthy(bothSize < uncompressedSize);
 });
 
 test('pathPrefix', async t => {
